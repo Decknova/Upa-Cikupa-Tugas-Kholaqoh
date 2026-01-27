@@ -28,6 +28,8 @@ h1, h2 {
 }
 
 .user-card {
+  position: relative;
+  overflow: hidden;
   background: rgba(255,255,255,0.12);
   backdrop-filter: blur(10px);
   padding: 18px;
@@ -38,9 +40,25 @@ h1, h2 {
   transition: 0.25s;
 }
 
+.user-card::before {
+  content: "🌙";
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 20px;
+  opacity: 0.8;
+}
+
+.user-card span {
+  display: block;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
 .user-card:hover {
   transform: translateY(-4px);
   background: rgba(46, 204, 113, 0.25);
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.6);
 }
 
 /* ================= TABLE ================= */
@@ -69,7 +87,6 @@ tbody td {
   border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
-/* kolom tugas */
 tbody td:first-child {
   text-align: left;
   font-weight: 500;
@@ -100,30 +117,3 @@ tbody td:first-child {
   font-size: 18px;
   font-weight: bold;
 }
-
-/* ================= NAMA CARD (HOME) ================= */
-.user-card {
-  position: relative;
-  overflow: hidden;
-}
-
-.user-card::before {
-  content: "🌙";
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  font-size: 20px;
-  opacity: 0.8;
-}
-
-.user-card span {
-  display: block;
-  font-size: 1.1rem;
-  letter-spacing: 0.5px;
-}
-
-/* efek glow halus */
-.user-card:hover {
-  box-shadow: 0 0 20px rgba(46, 204, 113, 0.6);
-}
-
