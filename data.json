@@ -1,12 +1,13 @@
 {
-  "heru": { "nama": "Heru" },
-  "fajar": { "nama": "Fajar" },
-  "faisal": { "nama": "Faisal" },
-  "arif": { "nama": "Arif" },
-  "mulyadi": { "nama": "Mulyadi" },
-  "yudy": { "nama": "Yudy" },
-  "kangdeni": { "nama": "Kang Deni" },
-
+  "users": {
+    "heru": { "nama": "Heru" },
+    "fajar": { "nama": "Fajar" },
+    "faisal": { "nama": "Faisal" },
+    "arif": { "nama": "Arif" },
+    "mulyadi": { "nama": "Mulyadi" },
+    "yudy": { "nama": "Yudy" },
+    "kangdeni": { "nama": "Kang Deni" }
+  },
   "tugas": [
     "Jamaah Subuh",
     "Qobliyah Subuh",
