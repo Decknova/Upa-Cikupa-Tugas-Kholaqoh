@@ -6,11 +6,15 @@ fetch("data.json?v=999")
 
   /* ================= INDEX ================= */
   const list = document.getElementById("list");
+
   if (list) {
     Object.keys(data.users).forEach(key => {
       const card = document.createElement("div");
       card.className = "user-card";
-      card.innerText = data.users[key].nama;
+
+      // ⬇️ INI YANG DI-FIX (PAKE span, BIAR CSS MASUK)
+      card.innerHTML = `<span>${data.users[key].nama}</span>`;
+
       card.onclick = () => {
         location.href = `detail.html?user=${key}`;
       };
