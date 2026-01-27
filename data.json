@@ -1,28 +1,30 @@
 {
-  "ahad": {
-    "nama": "Ahad",
-    "tugas": [
-      "Sholat Subuh",
-      "Sholat Dzuhur",
-      "Sholat Ashar",
-      "Sholat Maghrib",
-      "Sholat Isya",
-      "Tarawih",
-      "Sedekah Subuh",
-      "Tilawah Quran"
-    ]
-  },
-  "jhon": {
-    "nama": "Jhon",
-    "tugas": [
-      "Sholat Subuh",
-      "Sholat Dzuhur",
-      "Sholat Ashar",
-      "Sholat Maghrib",
-      "Sholat Isya",
-      "Tahajud",
-      "Witir",
-      "Puasa Sunnah"
-    ]
-  }
+  "heru": { "nama": "Heru" },
+  "fajar": { "nama": "Fajar" },
+  "faisal": { "nama": "Faisal" },
+  "arif": { "nama": "Arif" },
+  "mulyadi": { "nama": "Mulyadi" },
+  "yudy": { "nama": "Yudy" },
+  "kangdeni": { "nama": "Kang Deni" },
+
+  "tugas": [
+    "Jamaah Subuh",
+    "Qobliyah Subuh",
+    "Jamaah Dzuhur",
+    "Qobliyah Dzuhur",
+    "Ba'diyah Dzuhur",
+    "Jamaah Ashar",
+    "Jamaah Maghrib",
+    "Ba'diyah Maghrib",
+    "Jamaah Isya",
+    "Ba'diyah Isya",
+    "Dhuha",
+    "Tahajud",
+    "Witir",
+    "Puasa Sunnah",
+    "Tilawah Quran",
+    "Baca Buku",
+    "Sedekah Subuh",
+    "Riyadho"
+  ]
 }
