@@ -1,11 +1,13 @@
-fetch("data.json?v=99")
+fetch("data.json?v=123")
 .then(r => r.json())
 .then(data => {
   const q = new URLSearchParams(location.search);
-  const user = q.get("user");
-  if (!user) return;
+  const userKey = q.get("user");
 
-  document.getElementById("nama").innerText = data[user].nama;
+  if (!userKey || !data.users[userKey]) return;
+
+  document.getElementById("nama").innerText = data.users[userKey].nama;
+
   const tbody = document.querySelector("#tabel tbody");
   const days = ["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 
@@ -14,23 +16,19 @@ fetch("data.json?v=99")
     tr.innerHTML = `<td>${tugas}</td>`;
 
     days.forEach(day => {
-      const key = `${user}-${tugas}-${day}`;
-      const status = localStorage.getItem(key);
+      const key = `${userKey}-${tugas}-${day}`;
+      const done = localStorage.getItem(key);
 
       const td = document.createElement("td");
-      td.className = "cell" + (status === "done" ? " done" : "");
-      td.innerText = status === "done" ? "✓" : "";
+      td.className = "cell" + (done ? " done" : "");
+      td.innerText = done ? "✓" : "";
 
       td.onclick = () => {
-        if (td.classList.contains("done")) {
-          td.classList.remove("done");
-          td.innerText = "";
-          localStorage.removeItem(key);
-        } else {
-          td.classList.add("done");
-          td.innerText = "✓";
-          localStorage.setItem(key, "done");
-        }
+        td.classList.toggle("done");
+        td.innerText = td.classList.contains("done") ? "✓" : "";
+        td.classList.contains("done")
+          ? localStorage.setItem(key, "1")
+          : localStorage.removeItem(key);
       };
 
       tr.appendChild(td);
