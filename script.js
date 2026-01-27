@@ -65,3 +65,35 @@ fetch("data.json?v=999")
       tbody.appendChild(tr);
     });
   });
+/* ================= MUSIC ================= */
+const audio = document.getElementById("audio");
+const select = document.getElementById("musicSelect");
+const playBtn = document.getElementById("playBtn");
+
+if (audio && select && playBtn) {
+  select.addEventListener("change", () => {
+    if (!select.value) return;
+    audio.src = select.value;
+    audio.play();
+    playBtn.textContent = "⏸";
+    localStorage.setItem("lastMusic", select.value);
+  });
+
+  playBtn.addEventListener("click", () => {
+    if (!audio.src) return;
+    if (audio.paused) {
+      audio.play();
+      playBtn.textContent = "⏸";
+    } else {
+      audio.pause();
+      playBtn.textContent = "▶️";
+    }
+  });
+
+  // auto-load lagu terakhir
+  const last = localStorage.getItem("lastMusic");
+  if (last) {
+    select.value = last;
+    audio.src = last;
+  }
+}
