@@ -1,40 +1,48 @@
 fetch("data.json")
-.then(res => res.json())
+.then(r => r.json())
 .then(data => {
-  const params = new URLSearchParams(window.location.search);
-  const user = params.get("user");
+  const q = new URLSearchParams(location.search);
+  const user = q.get("user");
 
   // HOME
   if (!user) {
     const list = document.getElementById("list");
-    Object.keys(data).forEach(key => {
-      const div = document.createElement("div");
-      div.className = "card user-card";
-      div.innerText = data[key].nama;
-      div.onclick = () => {
-        location.href = `detail.html?user=${key}`;
-      };
-      list.appendChild(div);
+    Object.keys(data).forEach(k => {
+      if (k !== "tugas") {
+        const d = document.createElement("div");
+        d.className = "card user-card";
+        d.innerText = data[k].nama;
+        d.onclick = () => location.href = `detail.html?user=${k}`;
+        list.appendChild(d);
+      }
     });
   }
 
   // DETAIL
-  if (user && data[user]) {
+  if (user) {
     document.getElementById("nama").innerText = data[user].nama;
-    const tugas = document.getElementById("tugas");
+    const table = document.getElementById("tabel");
 
-    data[user].tugas.forEach(t => {
-      const div = document.createElement("div");
-      div.className = "card task";
-      div.innerHTML = `
-        <span>${t}</span>
-        <select>
-          <option>Belum</option>
-          <option>Selesai</option>
-          <option>Gagal</option>
-        </select>
+    data.tugas.forEach(t => {
+      const tr = document.createElement("tr");
+      const saved = localStorage.getItem(`${user}-${t}`) || "Belum";
+
+      tr.innerHTML = `
+        <td>${t}</td>
+        <td>
+          <select>
+            <option ${saved=="Belum"?"selected":""}>Belum</option>
+            <option ${saved=="Selesai"?"selected":""}>Selesai</option>
+            <option ${saved=="Gagal"?"selected":""}>Gagal</option>
+          </select>
+        </td>
       `;
-      tugas.appendChild(div);
+
+      tr.querySelector("select").onchange = (e) => {
+        localStorage.setItem(`${user}-${t}`, e.target.value);
+      };
+
+      table.appendChild(tr);
     });
   }
 });
