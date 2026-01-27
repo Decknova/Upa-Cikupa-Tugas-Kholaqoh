@@ -100,3 +100,30 @@ tbody td:first-child {
   font-size: 18px;
   font-weight: bold;
 }
+
+/* ================= NAMA CARD (HOME) ================= */
+.user-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.user-card::before {
+  content: "🌙";
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 20px;
+  opacity: 0.8;
+}
+
+.user-card span {
+  display: block;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+/* efek glow halus */
+.user-card:hover {
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.6);
+}
+
