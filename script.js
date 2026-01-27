@@ -18,52 +18,57 @@ fetch("data.json?v=999")
       });
     }
 
-    /* ================= DETAIL ================= */
+ /* ================= DETAIL ================= */
 if (userKey && data.users[userKey]) {
 
   const namaEl = document.getElementById("nama");
   const tbody = document.querySelector("#tabel tbody");
-  if (!namaEl || !tbody) return;
 
-  namaEl.innerText = data.users[userKey].nama;
-  tbody.innerHTML = "";
+  // kalau bukan halaman detail, STOP DI SINI (tanpa return global)
+  if (!namaEl || !tbody) {
+    // halaman index
+  } else {
 
-  const days = ["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    namaEl.innerText = data.users[userKey].nama;
+    tbody.innerHTML = "";
 
-  data.tugas.forEach(tugas => {
-    const tr = document.createElement("tr");
+    const days = ["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 
-    const tdTask = document.createElement("td");
-    tdTask.textContent = tugas;
-    tr.appendChild(tdTask);
+    data.tugas.forEach(tugas => {
+      const tr = document.createElement("tr");
 
-    days.forEach(day => {
-      const storageKey = `${userKey}-${tugas}-${day}`;
-      const done = localStorage.getItem(storageKey);
+      const tdTask = document.createElement("td");
+      tdTask.textContent = tugas;
+      tr.appendChild(tdTask);
 
-      const td = document.createElement("td");
-      const cell = document.createElement("div");
-      cell.className = "cell" + (done ? " done" : "");
-      cell.textContent = done ? "✓" : "";
+      days.forEach(day => {
+        const storageKey = `${userKey}-${tugas}-${day}`;
+        const done = localStorage.getItem(storageKey);
 
-      cell.onclick = () => {
-        if (cell.classList.contains("done")) {
-          cell.classList.remove("done");
-          cell.textContent = "";
-          localStorage.removeItem(storageKey);
-        } else {
-          cell.classList.add("done");
-          cell.textContent = "✓";
-          localStorage.setItem(storageKey, "1");
-        }
-      };
+        const td = document.createElement("td");
+        const cell = document.createElement("div");
+        cell.className = "cell" + (done ? " done" : "");
+        cell.textContent = done ? "✓" : "";
 
-      td.appendChild(cell);
-      tr.appendChild(td);
+        cell.onclick = () => {
+          if (cell.classList.contains("done")) {
+            cell.classList.remove("done");
+            cell.textContent = "";
+            localStorage.removeItem(storageKey);
+          } else {
+            cell.classList.add("done");
+            cell.textContent = "✓";
+            localStorage.setItem(storageKey, "1");
+          }
+        };
+
+        td.appendChild(cell);
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
     });
-
-    tbody.appendChild(tr);
-  });
+  }
 }
 
 /* ================= MUSIC ================= */
