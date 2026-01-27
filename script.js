@@ -24,38 +24,42 @@ fetch("data.json?v=999")
 
   /* ================= DETAIL ================= */
   if (userKey && data.users[userKey]) {
-    document.getElementById("nama").innerText = data.users[userKey].nama;
-    const tbody = document.querySelector("#tabel tbody");
-    const days = ["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  document.getElementById("nama").innerText = data.users[userKey].nama;
+  const tbody = document.querySelector("#tabel tbody");
+  const days = ["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 
-    data.tugas.forEach(tugas => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${tugas}</td>`;
+  data.tugas.forEach(tugas => {
+    const tr = document.createElement("tr");
 
-      days.forEach(day => {
-        const key = `${userKey}-${tugas}-${day}`;
-        const done = localStorage.getItem(key);
+    // kolom tugas (kiri)
+    const tdTask = document.createElement("td");
+    tdTask.innerText = tugas;
+    tr.appendChild(tdTask);
 
-        const td = document.createElement("td");
-        td.className = "cell" + (done ? " done" : "");
-        td.innerText = done ? "✓" : "";
+    // kolom hari (KANAN)
+    days.forEach(day => {
+      const key = `${userKey}-${tugas}-${day}`;
+      const done = localStorage.getItem(key);
 
-        td.onclick = () => {
-          if (td.classList.contains("done")) {
-            td.classList.remove("done");
-            td.innerText = "";
-            localStorage.removeItem(key);
-          } else {
-            td.classList.add("done");
-            td.innerText = "✓";
-            localStorage.setItem(key, "1");
-          }
-        };
+      const td = document.createElement("td");
+      td.innerHTML = `<div class="cell ${done ? "done" : ""}">${done ? "✓" : ""}</div>`;
 
-        tr.appendChild(td);
-      });
+      td.onclick = () => {
+        const cell = td.querySelector(".cell");
+        if (cell.classList.contains("done")) {
+          cell.classList.remove("done");
+          cell.innerText = "";
+          localStorage.removeItem(key);
+        } else {
+          cell.classList.add("done");
+          cell.innerText = "✓";
+          localStorage.setItem(key, "1");
+        }
+      };
 
-      tbody.appendChild(tr);
+      tr.appendChild(td);
     });
-  }
-});
+
+    tbody.appendChild(tr);
+  });
+}
