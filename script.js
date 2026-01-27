@@ -19,55 +19,53 @@ fetch("data.json?v=999")
     }
 
     /* ================= DETAIL ================= */
-    if (!userKey || !data.users[userKey]) return;
+if (userKey && data.users[userKey]) {
 
-    const namaEl = document.getElementById("nama");
-    const tbody = document.querySelector("#tabel tbody");
-    if (!namaEl || !tbody) return;
+  const namaEl = document.getElementById("nama");
+  const tbody = document.querySelector("#tabel tbody");
+  if (!namaEl || !tbody) return;
 
-    namaEl.innerText = data.users[userKey].nama;
-    tbody.innerHTML = ""; // reset
-    
-    const days = ["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  namaEl.innerText = data.users[userKey].nama;
+  tbody.innerHTML = "";
 
-    data.tugas.forEach(tugas => {
-      const tr = document.createElement("tr");
+  const days = ["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 
-      // kolom tugas (kiri)
-      const tdTask = document.createElement("td");
-      tdTask.textContent = tugas;
-      tr.appendChild(tdTask);
+  data.tugas.forEach(tugas => {
+    const tr = document.createElement("tr");
 
-      // kolom hari (KE SAMPING)
-      days.forEach(day => {
-        const storageKey = `${userKey}-${tugas}-${day}`;
-        const done = localStorage.getItem(storageKey);
+    const tdTask = document.createElement("td");
+    tdTask.textContent = tugas;
+    tr.appendChild(tdTask);
 
-        const td = document.createElement("td");
+    days.forEach(day => {
+      const storageKey = `${userKey}-${tugas}-${day}`;
+      const done = localStorage.getItem(storageKey);
 
-        const cell = document.createElement("div");
-        cell.className = "cell" + (done ? " done" : "");
-        cell.textContent = done ? "✓" : "";
+      const td = document.createElement("td");
+      const cell = document.createElement("div");
+      cell.className = "cell" + (done ? " done" : "");
+      cell.textContent = done ? "✓" : "";
 
-        cell.addEventListener("click", () => {
-          if (cell.classList.contains("done")) {
-            cell.classList.remove("done");
-            cell.textContent = "";
-            localStorage.removeItem(storageKey);
-          } else {
-            cell.classList.add("done");
-            cell.textContent = "✓";
-            localStorage.setItem(storageKey, "1");
-          }
-        });
+      cell.onclick = () => {
+        if (cell.classList.contains("done")) {
+          cell.classList.remove("done");
+          cell.textContent = "";
+          localStorage.removeItem(storageKey);
+        } else {
+          cell.classList.add("done");
+          cell.textContent = "✓";
+          localStorage.setItem(storageKey, "1");
+        }
+      };
 
-        td.appendChild(cell);
-        tr.appendChild(td);
-      });
-
-      tbody.appendChild(tr);
+      td.appendChild(cell);
+      tr.appendChild(td);
     });
+
+    tbody.appendChild(tr);
   });
+}
+
 /* ================= MUSIC ================= */
 const audio = document.getElementById("audio");
 const select = document.getElementById("musicSelect");
