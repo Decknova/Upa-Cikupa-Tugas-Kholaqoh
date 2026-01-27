@@ -4,55 +4,62 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  font-family: 'Poppins', sans-serif;
   color: #fff;
   min-height: 100vh;
-  padding: 20px;
+  overflow-x: hidden;
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
+/* BACKGROUND */
+.bg {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at top, #1f4037, #0b1d26),
+    url("https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-blend-mode: overlay;
+  z-index: -1;
 }
 
+/* CONTAINER */
 .container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: auto;
+  padding: 40px 20px;
+  text-align: center;
 }
 
-/* CARD */
-.card {
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(12px);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 5px;
 }
 
-/* NAMA */
+.subtitle {
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+/* CARD NAMA */
 .user-card {
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 22px 10px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  font-weight: 600;
 }
+
 .user-card:hover {
-  transform: scale(1.03);
-  background: rgba(0,255,170,0.15);
-}
-
-/* TUGAS */
-.task {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 10px 0;
-}
-
-select {
-  background: #0f2027;
-  color: white;
-  border: 1px solid #00ffb3;
-  padding: 6px;
-  border-radius: 8px;
+  transform: translateY(-6px) scale(1.03);
+  background: rgba(0,255,180,0.18);
 }
