@@ -1,1 +1,58 @@
+* {
+  box-sizing: border-box;
+}
 
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* NAMA */
+.user-card {
+  cursor: pointer;
+  transition: 0.3s;
+}
+.user-card:hover {
+  transform: scale(1.03);
+  background: rgba(0,255,170,0.15);
+}
+
+/* TUGAS */
+.task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+select {
+  background: #0f2027;
+  color: white;
+  border: 1px solid #00ffb3;
+  padding: 6px;
+  border-radius: 8px;
+}
