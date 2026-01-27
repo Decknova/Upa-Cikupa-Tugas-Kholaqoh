@@ -1,39 +1,57 @@
-fetch("data.json?v=123")
-.then(r => r.json())
+fetch("data.json?v=999")
+.then(res => res.json())
 .then(data => {
-  const q = new URLSearchParams(location.search);
-  const userKey = q.get("user");
+  const params = new URLSearchParams(location.search);
+  const userKey = params.get("user");
 
-  if (!userKey || !data.users[userKey]) return;
-
-  document.getElementById("nama").innerText = data.users[userKey].nama;
-
-  const tbody = document.querySelector("#tabel tbody");
-  const days = ["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-
-  data.tugas.forEach(tugas => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${tugas}</td>`;
-
-    days.forEach(day => {
-      const key = `${userKey}-${tugas}-${day}`;
-      const done = localStorage.getItem(key);
-
-      const td = document.createElement("td");
-      td.className = "cell" + (done ? " done" : "");
-      td.innerText = done ? "✓" : "";
-
-      td.onclick = () => {
-        td.classList.toggle("done");
-        td.innerText = td.classList.contains("done") ? "✓" : "";
-        td.classList.contains("done")
-          ? localStorage.setItem(key, "1")
-          : localStorage.removeItem(key);
+  /* ================= INDEX ================= */
+  const list = document.getElementById("list");
+  if (list) {
+    Object.keys(data.users).forEach(key => {
+      const card = document.createElement("div");
+      card.className = "user-card";
+      card.innerText = data.users[key].nama;
+      card.onclick = () => {
+        location.href = `detail.html?user=${key}`;
       };
-
-      tr.appendChild(td);
+      list.appendChild(card);
     });
+  }
 
-    tbody.appendChild(tr);
-  });
+  /* ================= DETAIL ================= */
+  if (userKey && data.users[userKey]) {
+    document.getElementById("nama").innerText = data.users[userKey].nama;
+    const tbody = document.querySelector("#tabel tbody");
+    const days = ["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+
+    data.tugas.forEach(tugas => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${tugas}</td>`;
+
+      days.forEach(day => {
+        const key = `${userKey}-${tugas}-${day}`;
+        const done = localStorage.getItem(key);
+
+        const td = document.createElement("td");
+        td.className = "cell" + (done ? " done" : "");
+        td.innerText = done ? "✓" : "";
+
+        td.onclick = () => {
+          if (td.classList.contains("done")) {
+            td.classList.remove("done");
+            td.innerText = "";
+            localStorage.removeItem(key);
+          } else {
+            td.classList.add("done");
+            td.innerText = "✓";
+            localStorage.setItem(key, "1");
+          }
+        };
+
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+  }
 });
