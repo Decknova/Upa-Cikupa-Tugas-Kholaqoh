@@ -21,10 +21,13 @@ fetch("data.json?v=999")
     /* ================= DETAIL ================= */
     if (!userKey || !data.users[userKey]) return;
 
-    document.getElementById("nama").innerText = data.users[userKey].nama;
+    const namaEl = document.getElementById("nama");
     const tbody = document.querySelector("#tabel tbody");
-    tbody.innerHTML = ""; // PENTING: reset dulu
+    if (!namaEl || !tbody) return;
 
+    namaEl.innerText = data.users[userKey].nama;
+    tbody.innerHTML = ""; // reset
+    
     const days = ["Ahad","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 
     data.tugas.forEach(tugas => {
