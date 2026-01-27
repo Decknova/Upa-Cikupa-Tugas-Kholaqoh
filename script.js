@@ -94,9 +94,20 @@ if (audio && select && playBtn) {
   });
 
   // auto-load lagu terakhir
-  const last = localStorage.getItem("lastMusic");
-  if (last) {
-    select.value = last;
-    audio.src = last;
-  }
+const last = localStorage.getItem("lastMusic");
+
+if (last) {
+  select.value = last;
+  audio.src = last;
+
+  // 🔑 AUTO PLAY SAAT PINDAH HALAMAN
+  audio.play()
+    .then(() => {
+      playBtn.textContent = "⏸";
+    })
+    .catch(() => {
+      // browser block auto play, aman
+      playBtn.textContent = "▶️";
+    });
 }
+
