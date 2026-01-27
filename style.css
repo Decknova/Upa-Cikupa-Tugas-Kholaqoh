@@ -1,42 +1,102 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(180deg, #0f2027, #203a43);
+  color: #fff;
+}
+
+/* CONTAINER */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 24px;
+}
+
+h1, h2 {
+  margin-bottom: 16px;
+}
+
+/* ================= INDEX ================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.user-card {
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  padding: 18px;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.user-card:hover {
+  transform: translateY(-4px);
+  background: rgba(46, 204, 113, 0.25);
+}
+
+/* ================= TABLE ================= */
 .table-wrapper {
   overflow-x: auto;
-  margin-top: 20px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 12px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 700px;
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 14px;
-  overflow: hidden;
+  min-width: 900px;
 }
 
-th, td {
-  padding: 10px;
+thead th {
+  background: rgba(0,0,0,0.4);
+  padding: 12px;
+  font-weight: 600;
   text-align: center;
+}
+
+tbody td {
+  padding: 10px;
   border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
-th {
-  background: rgba(0,0,0,0.4);
-  font-weight: 600;
-}
-
-td:first-child {
+/* kolom tugas */
+tbody td:first-child {
   text-align: left;
   font-weight: 500;
+  white-space: nowrap;
 }
 
+/* ================= CELL ================= */
 .cell {
+  width: 44px;
+  height: 44px;
+  margin: auto;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  border-radius: 8px;
   transition: 0.2s;
+}
+
+.cell:hover {
+  background: rgba(255,255,255,0.3);
 }
 
 .cell.done {
   background: #2ecc71;
   color: #000;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: bold;
 }
