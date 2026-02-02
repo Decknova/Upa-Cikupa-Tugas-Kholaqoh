@@ -14,14 +14,53 @@ fetch("data.json")
         const card = document.createElement("div");
         card.className = "user-card";
         card.innerHTML = `<span>${data.users[key].nama}</span>`;
-
-        // ✅ NAVIGASI NORMAL (TANPA IFRAME)
         card.onclick = () => {
           location.href = `detail.html?user=${key}`;
         };
-
         list.appendChild(card);
       });
+
+      /* ================= MUSIC (INDEX ONLY) ================= */
+      const audio = document.getElementById("audio");
+      const select = document.getElementById("musicSelect");
+      const playBtn = document.getElementById("playBtn");
+
+      if (audio && select && playBtn) {
+
+        // pilih lagu (tanpa autoplay)
+        select.addEventListener("change", () => {
+          if (!select.value) return;
+          audio.src = select.value;
+          playBtn.textContent = "▶️";
+          localStorage.setItem("lastMusic", select.value);
+        });
+
+        // play / pause (harus klik user)
+        playBtn.addEventListener("click", () => {
+          if (!audio.src) {
+            alert("Pilih musik dulu");
+            return;
+          }
+          if (audio.paused) {
+            audio.play()
+              .then(() => playBtn.textContent = "⏸")
+              .catch(err => {
+                console.log("Audio blocked:", err);
+                alert("Browser memblokir audio");
+              });
+          } else {
+            audio.pause();
+            playBtn.textContent = "▶️";
+          }
+        });
+
+        // restore lagu terakhir (tanpa autoplay)
+        const last = localStorage.getItem("lastMusic");
+        if (last) {
+          audio.src = last;
+          select.value = last;
+        }
+      }
     }
 
     /* ================= DETAIL ================= */
