@@ -7,9 +7,8 @@ fetch("data.json")
     /* ================= INDEX ================= */
     if (document.body.id === "page-index") {
       const list = document.getElementById("list");
-      if (!list) return;
 
-      list.innerHTML = "";
+      // === RENDER USER CARD ===
       Object.keys(data.users).forEach(key => {
         const card = document.createElement("div");
         card.className = "user-card";
@@ -20,90 +19,69 @@ fetch("data.json")
         list.appendChild(card);
       });
 
-      /* ================= MUSIC (INDEX ONLY) ================= */
+      // === MUSIC PLAYER (INDEX ONLY) ===
       const audio = document.getElementById("audio");
       const select = document.getElementById("musicSelect");
       const playBtn = document.getElementById("playBtn");
 
       if (audio && select && playBtn) {
 
-        // pilih lagu (tanpa autoplay)
+        // pilih lagu
         select.addEventListener("change", () => {
           if (!select.value) return;
           audio.src = select.value;
-          playBtn.textContent = "▶️";
-          localStorage.setItem("lastMusic", select.value);
+          audio.play()
+            .then(() => playBtn.textContent = "⏸")
+            .catch(() => alert("Klik ▶️ untuk mulai musik"));
         });
 
-        // play / pause (harus klik user)
+        // play / pause
         playBtn.addEventListener("click", () => {
           if (!audio.src) {
             alert("Pilih musik dulu");
             return;
           }
+
           if (audio.paused) {
             audio.play()
-              .then(() => playBtn.textContent = "⏸")
-              .catch(err => {
-                console.log("Audio blocked:", err);
-                alert("Browser memblokir audio");
-              });
+              .then(() => playBtn.textContent = "⏸");
           } else {
             audio.pause();
             playBtn.textContent = "▶️";
           }
         });
-
-        // restore lagu terakhir (tanpa autoplay)
-        const last = localStorage.getItem("lastMusic");
-        if (last) {
-          audio.src = last;
-          select.value = last;
-        }
       }
     }
 
     /* ================= DETAIL ================= */
     if (document.body.id === "page-detail") {
       const userKey = new URLSearchParams(location.search).get("user");
-      if (!userKey || !data.users[userKey]) return;
+      if (!userKey) return;
 
       const namaEl = document.getElementById("nama");
       const tbody = document.querySelector("#tabel tbody");
-      if (!namaEl || !tbody) return;
 
       namaEl.textContent = data.users[userKey].nama;
-      tbody.innerHTML = "";
 
       data.tugas.forEach(tugas => {
         const tr = document.createElement("tr");
-
-        const tdTask = document.createElement("td");
-        tdTask.textContent = tugas;
-        tr.appendChild(tdTask);
+        tr.innerHTML = `<td>${tugas}</td>`;
 
         days.forEach(day => {
-          const storageKey = `${userKey}-${tugas}-${day}`;
-          const done = localStorage.getItem(storageKey);
-
+          const key = `${userKey}-${tugas}-${day}`;
           const td = document.createElement("td");
-          const cell = document.createElement("div");
-          cell.className = "cell" + (done ? " done" : "");
-          cell.textContent = done ? "✓" : "";
+          td.textContent = localStorage.getItem(key) ? "✓" : "";
 
-          cell.onclick = () => {
-            if (cell.classList.contains("done")) {
-              cell.classList.remove("done");
-              cell.textContent = "";
-              localStorage.removeItem(storageKey);
+          td.onclick = () => {
+            if (localStorage.getItem(key)) {
+              localStorage.removeItem(key);
+              td.textContent = "";
             } else {
-              cell.classList.add("done");
-              cell.textContent = "✓";
-              localStorage.setItem(storageKey, "1");
+              localStorage.setItem(key, "1");
+              td.textContent = "✓";
             }
           };
 
-          td.appendChild(cell);
           tr.appendChild(td);
         });
 
@@ -114,25 +92,19 @@ fetch("data.json")
     /* ================= GRAFIK ================= */
     if (document.body.id === "page-grafik") {
       const canvas = document.getElementById("allChart");
-      if (!canvas) return;
-
       const labels = [];
       const values = [];
-      const totalMax = data.tugas.length * days.length;
+      const total = data.tugas.length * days.length;
 
       Object.keys(data.users).forEach(userKey => {
-        let doneCount = 0;
+        let done = 0;
         data.tugas.forEach(t =>
           days.forEach(d => {
-            if (localStorage.getItem(`${userKey}-${t}-${d}`)) {
-              doneCount++;
-            }
+            if (localStorage.getItem(`${userKey}-${t}-${d}`)) done++;
           })
         );
-
-        const percent = Math.round((doneCount / totalMax) * 100);
         labels.push(data.users[userKey].nama);
-        values.push(percent);
+        values.push(Math.round((done / total) * 100));
       });
 
       new Chart(canvas, {
@@ -146,7 +118,6 @@ fetch("data.json")
           }]
         },
         options: {
-          responsive: true,
           scales: {
             y: {
               beginAtZero: true,
@@ -168,4 +139,4 @@ fetch("data.json")
     }
 
   })
-  .catch(err => console.error("SCRIPT ERROR:", err));
+  .catch(err => console.error(err));
