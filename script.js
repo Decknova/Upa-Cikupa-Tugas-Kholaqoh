@@ -21,24 +21,29 @@ fetch("data.json")
         list.appendChild(card);
       });
 
-      // 🎵 MUSIC PLAYER (INDEX ONLY)
+      // MUSIC PLAYER (INDEX ONLY)
       const audio = document.getElementById("audio");
       const select = document.getElementById("musicSelect");
       const playBtn = document.getElementById("playBtn");
 
       if (audio && select && playBtn) {
+
         select.onchange = () => {
           if (!select.value) return;
           audio.src = select.value;
-          audio.play().catch(() => {});
-          playBtn.textContent = "⏸";
+          audio.play()
+            .then(() => playBtn.textContent = "⏸")
+            .catch(() => alert("Klik ▶️ untuk mulai musik"));
         };
 
         playBtn.onclick = () => {
-          if (!audio.src) return;
+          if (!audio.src) {
+            alert("Pilih musik dulu");
+            return;
+          }
+
           if (audio.paused) {
-            audio.play().catch(() => {});
-            playBtn.textContent = "⏸";
+            audio.play().then(() => playBtn.textContent = "⏸");
           } else {
             audio.pause();
             playBtn.textContent = "▶️";
@@ -53,65 +58,48 @@ fetch("data.json")
       if (!userKey || !data.users[userKey]) return;
 
       const namaEl = document.getElementById("nama");
-      const tbody = document.querySelector("#tabel tbody");
       const thead = document.getElementById("thead");
-
-      if (!namaEl || !tbody || !thead) return;
+      const tbody = document.querySelector("#tabel tbody");
 
       namaEl.textContent = data.users[userKey].nama;
-      tbody.innerHTML = "";
-      thead.innerHTML = "";
 
-      // === BUAT HEADER DENGAN TANGGAL ===
-      const trHead = document.createElement("tr");
-      trHead.innerHTML = `<th>Tugas</th>`;
-
+      // HEADER DENGAN TANGGAL
       const today = new Date();
       const start = new Date(today);
-      start.setDate(today.getDate() - today.getDay()); // mulai Ahad
+      start.setDate(today.getDate() - today.getDay());
 
-      days.forEach((day, i) => {
-        const d = new Date(start);
-        d.setDate(start.getDate() + i);
-        const tgl = d.getDate();
+      thead.innerHTML = `
+        <tr>
+          <th>Tugas</th>
+          ${days.map((d,i)=>{
+            const dt = new Date(start);
+            dt.setDate(start.getDate()+i);
+            return `<th>${d}<br>${dt.getDate()}/${dt.getMonth()+1}</th>`;
+          }).join("")}
+        </tr>
+      `;
 
-        const th = document.createElement("th");
-        th.innerHTML = `${day}<br><small>${tgl}</small>`;
-        trHead.appendChild(th);
-      });
+      tbody.innerHTML = "";
 
-      thead.appendChild(trHead);
-
-      // === ISI TABEL ===
       data.tugas.forEach(tugas => {
         const tr = document.createElement("tr");
-
-        const tdTask = document.createElement("td");
-        tdTask.textContent = tugas;
-        tr.appendChild(tdTask);
+        tr.innerHTML = `<td>${tugas}</td>`;
 
         days.forEach(day => {
-          const storageKey = `${userKey}-${tugas}-${day}`;
-          const done = localStorage.getItem(storageKey);
-
+          const key = `${userKey}-${tugas}-${day}`;
           const td = document.createElement("td");
-          const cell = document.createElement("div");
-          cell.className = "cell" + (done ? " done" : "");
-          cell.textContent = done ? "✓" : "";
+          td.textContent = localStorage.getItem(key) ? "✓" : "";
 
-          cell.onclick = () => {
-            if (cell.classList.contains("done")) {
-              cell.classList.remove("done");
-              cell.textContent = "";
-              localStorage.removeItem(storageKey);
+          td.onclick = () => {
+            if (localStorage.getItem(key)) {
+              localStorage.removeItem(key);
+              td.textContent = "";
             } else {
-              cell.classList.add("done");
-              cell.textContent = "✓";
-              localStorage.setItem(storageKey, "1");
+              localStorage.setItem(key, "1");
+              td.textContent = "✓";
             }
           };
 
-          td.appendChild(cell);
           tr.appendChild(td);
         });
 
@@ -150,7 +138,6 @@ fetch("data.json")
           }]
         },
         options: {
-          responsive: true,
           scales: {
             y: {
               beginAtZero: true,
