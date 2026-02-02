@@ -8,7 +8,7 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- TAMBAHAN INI (WAJIB untuk persen) -->
+  <!-- Plugin persen -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 </head>
 <body>
@@ -18,6 +18,20 @@
   <canvas id="allChart" height="140"></canvas>
 </div>
 
+<!-- MUSIC PLAYER -->
+<div class="music-player">
+  <select id="musicSelect">
+    <option value="">🎵 Pilih Musik</option>
+    <option value="music/nasheed1.mp3">Nasheed 1</option>
+    <option value="music/nasheed2.mp3">Nasheed 2</option>
+  </select>
+  <button id="playBtn">▶️</button>
+</div>
+
+<audio id="audio"></audio>
+
+<!-- SCRIPT PALING BAWAH -->
 <script src="script.js"></script>
+
 </body>
 </html>
