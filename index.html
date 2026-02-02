@@ -11,7 +11,15 @@
 <div class="container">
   <h1>🌙 Ramadan Tracker</h1>
   <p class="subtitle">Pilih Nama</p>
+
+  <!-- LIST NAMA -->
   <div id="list" class="grid"></div>
+
+  <!-- GRAFIK PROGRESS (MUNCUL SAAT KLIK NAMA) -->
+  <div id="chartBox" style="display:none; margin-top:32px">
+    <h3 id="chartName"></h3>
+    <canvas id="progressChart" height="140"></canvas>
+  </div>
 </div>
 
 <!-- MUSIC PLAYER -->
@@ -24,9 +32,12 @@
   <button id="playBtn">▶️</button>
 </div>
 
-<audio id="audio"></audio>
+<audio id="audio" preload="auto"></audio>
 
-<!-- SCRIPT PALING BAWAH -->
+<!-- CHART JS (WAJIB UNTUK GRAFIK) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- SCRIPT UTAMA -->
 <script src="script.js"></script>
 </body>
 </html>
