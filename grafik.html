@@ -5,17 +5,23 @@
   <title>Grafik Progres</title>
   <link rel="stylesheet" href="style.css">
 
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Plugin persentase -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 </head>
 
 <body id="page-grafik">
 
-<div class="container">
-  <h2>📊 Progres Semua Orang</h2>
-  <canvas id="allChart"></canvas>
-</div>
+  <div class="container">
+    <h2>📊 Progres Semua Orang</h2>
 
-<script src="script.js"></script>
+    <!-- canvas WAJIB punya tinggi -->
+    <canvas id="allChart" height="140"></canvas>
+  </div>
+
+  <!-- script global -->
+  <script src="script.js"></script>
 </body>
 </html>
