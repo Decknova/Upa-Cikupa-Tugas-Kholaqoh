@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Ramadan Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 🎧 MUSIC GLOBAL -->
+<div class="music-player">
+  <select id="musicSelect">
+    <option value="">🎵 Pilih Musik</option>
+    <option value="music/nasheed1.mp3">Nasheed 1</option>
+    <option value="music/nasheed2.mp3">Nasheed 2</option>
+  </select>
+  <button id="playBtn">▶️</button>
+</div>
+
+<audio id="audio"></audio>
+
+<!-- 📄 KONTEN -->
+<iframe 
+  id="frame"
+  src="index.html"
+  style="width:100%; height:calc(100vh - 80px); border:none;">
+</iframe>
+
+<script src="script.js"></script>
+</body>
+</html>
