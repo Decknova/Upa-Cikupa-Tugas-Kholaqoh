@@ -15,42 +15,12 @@ fetch("data.json")
         card.className = "user-card";
         card.innerHTML = `<span>${data.users[key].nama}</span>`;
         card.onclick = () => {
-          location.href = `detail.html?user=${key}`;
+          // ⬇️ NAVIGASI VIA IFRAME (BIAR MUSIK TETAP NYALA)
+          parent.document.getElementById("frame").src =
+            `detail.html?user=${key}`;
         };
         list.appendChild(card);
       });
-
-      // MUSIC (INDEX ONLY)
-      const audio = document.getElementById("audio");
-      const select = document.getElementById("musicSelect");
-      const playBtn = document.getElementById("playBtn");
-
-      if (audio && select && playBtn) {
-        select.onchange = () => {
-          if (!select.value) return;
-          audio.src = select.value;
-          audio.play().catch(()=>{});
-          playBtn.textContent = "⏸";
-          localStorage.setItem("lastMusic", select.value);
-        };
-
-        playBtn.onclick = () => {
-          if (!audio.src) return;
-          if (audio.paused) {
-            audio.play().catch(()=>{});
-            playBtn.textContent = "⏸";
-          } else {
-            audio.pause();
-            playBtn.textContent = "▶️";
-          }
-        };
-
-        const last = localStorage.getItem("lastMusic");
-        if (last) {
-          select.value = last;
-          audio.src = last;
-        }
-      }
     }
 
     /* ================= DETAIL ================= */
@@ -108,12 +78,10 @@ fetch("data.json")
 
       const labels = [];
       const values = [];
-
       const totalMax = data.tugas.length * days.length;
 
       Object.keys(data.users).forEach(userKey => {
         let doneCount = 0;
-
         data.tugas.forEach(t =>
           days.forEach(d => {
             if (localStorage.getItem(`${userKey}-${t}-${d}`)) {
@@ -143,9 +111,7 @@ fetch("data.json")
             y: {
               beginAtZero: true,
               max: 100,
-              ticks: {
-                callback: v => v + "%"
-              }
+              ticks: { callback: v => v + "%" }
             }
           },
           plugins: {
