@@ -4,36 +4,20 @@
   <meta charset="UTF-8">
   <title>Ramadan Tracker</title>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="container">
   <h1>🌙 Ramadan Tracker</h1>
-  <p class="subtitle">Pilih Nama</p>
+  <p>Pilih Nama</p>
 
-  <!-- TOMBOL KE HALAMAN GRAFIK -->
-  <button onclick="location.href='grafik.html'" class="chart-page-btn">
+  <button onclick="location.href='grafik.html'">
     📊 Lihat Grafik Progres
   </button>
 
-  <!-- LIST NAMA -->
   <div id="list" class="grid"></div>
 </div>
 
-<!-- MUSIC PLAYER -->
-<div class="music-player">
-  <select id="musicSelect">
-    <option value="">🎵 Pilih Musik</option>
-    <option value="music/nasheed1.mp3">Nasheed 1</option>
-    <option value="music/nasheed2.mp3">Nasheed 2</option>
-  </select>
-  <button id="playBtn">▶️</button>
-</div>
-
-<audio id="audio" preload="auto"></audio>
-
-<!-- SCRIPT -->
 <script src="script.js"></script>
 </body>
 </html>
