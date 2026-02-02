@@ -14,11 +14,12 @@ fetch("data.json")
         const card = document.createElement("div");
         card.className = "user-card";
         card.innerHTML = `<span>${data.users[key].nama}</span>`;
+
+        // ✅ NAVIGASI NORMAL (TANPA IFRAME)
         card.onclick = () => {
-          // ⬇️ NAVIGASI VIA IFRAME (BIAR MUSIK TETAP NYALA)
-          parent.document.getElementById("frame").src =
-            `detail.html?user=${key}`;
+          location.href = `detail.html?user=${key}`;
         };
+
         list.appendChild(card);
       });
     }
