@@ -8,45 +8,15 @@ fetch("data.json?v=999")
 
     /* ================= INDEX ================= */
     const list = document.getElementById("list");
-    const chartBox = document.getElementById("chartBox");
-    const chartName = document.getElementById("chartName");
-    const chartCanvas = document.getElementById("progressChart");
-    let chart; // supaya bisa destroy grafik lama
-
     if (list && data.users) {
       list.innerHTML = "";
-
       Object.keys(data.users).forEach(key => {
         const card = document.createElement("div");
         card.className = "user-card";
         card.innerHTML = `<span>${data.users[key].nama}</span>`;
-
-        // ⬇️ KLIK NAMA → TAMPILKAN GRAFIK (TANPA PINDAH HALAMAN)
         card.onclick = () => {
-          if (!chartBox || !chartCanvas) return;
-
-          const persen = hitungProgress(key, data.tugas, days);
-          chartBox.style.display = "block";
-          chartName.textContent = `Progres ${data.users[key].nama} (${persen}%)`;
-
-          if (chart) chart.destroy();
-
-          chart = new Chart(chartCanvas, {
-            type: "doughnut",
-            data: {
-              labels: ["Selesai", "Belum"],
-              datasets: [{
-                data: [persen, 100 - persen],
-                backgroundColor: ["#2ecc71", "#2c3e50"]
-              }]
-            },
-            options: {
-              cutout: "70%",
-              plugins: { legend: { display: false } }
-            }
-          });
+          location.href = `detail.html?user=${key}`;
         };
-
         list.appendChild(card);
       });
     }
@@ -126,10 +96,35 @@ fetch("data.json?v=999")
       if (last) {
         select.value = last;
         audio.src = last;
-        audio.play()
-          .then(() => playBtn.textContent = "⏸")
-          .catch(() => playBtn.textContent = "▶️");
       }
+    }
+
+    /* ================= GRAFIK SEMUA ORANG ================= */
+    const allChart = document.getElementById("allChart");
+    if (allChart && data.users) {
+      const labels = [];
+      const values = [];
+
+      Object.keys(data.users).forEach(key => {
+        labels.push(data.users[key].nama);
+        values.push(hitungProgress(key, data.tugas, days));
+      });
+
+      new Chart(allChart, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{
+            label: "Progres (%)",
+            data: values
+          }]
+        },
+        options: {
+          scales: {
+            y: { min: 0, max: 100 }
+          }
+        }
+      });
     }
 
   })
