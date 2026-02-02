@@ -13,14 +13,14 @@ fetch("data.json")
       Object.keys(data.users).forEach(key => {
         const card = document.createElement("div");
         card.className = "user-card";
-        card.textContent = data.users[key].nama;
+        card.innerHTML = `<span>${data.users[key].nama}</span>`;
         card.onclick = () => {
           location.href = `detail.html?user=${key}`;
         };
         list.appendChild(card);
       });
 
-      // MUSIC INDEX ONLY
+      // MUSIC (INDEX ONLY)
       const audio = document.getElementById("audio");
       const select = document.getElementById("musicSelect");
       const playBtn = document.getElementById("playBtn");
@@ -56,34 +56,44 @@ fetch("data.json")
     /* ================= DETAIL ================= */
     if (document.body.id === "page-detail") {
       const userKey = new URLSearchParams(location.search).get("user");
-      if (!userKey) return;
+      if (!userKey || !data.users[userKey]) return;
 
       const namaEl = document.getElementById("nama");
       const tbody = document.querySelector("#tabel tbody");
       if (!namaEl || !tbody) return;
 
-      namaEl.innerText = data.users[userKey].nama;
+      namaEl.textContent = data.users[userKey].nama;
       tbody.innerHTML = "";
 
       data.tugas.forEach(tugas => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${tugas}</td>`;
+
+        const tdTask = document.createElement("td");
+        tdTask.textContent = tugas;
+        tr.appendChild(tdTask);
 
         days.forEach(day => {
-          const key = `${userKey}-${tugas}-${day}`;
-          const td = document.createElement("td");
-          td.textContent = localStorage.getItem(key) ? "✓" : "";
+          const storageKey = `${userKey}-${tugas}-${day}`;
+          const done = localStorage.getItem(storageKey);
 
-          td.onclick = () => {
-            if (localStorage.getItem(key)) {
-              localStorage.removeItem(key);
-              td.textContent = "";
+          const td = document.createElement("td");
+          const cell = document.createElement("div");
+          cell.className = "cell" + (done ? " done" : "");
+          cell.textContent = done ? "✓" : "";
+
+          cell.onclick = () => {
+            if (cell.classList.contains("done")) {
+              cell.classList.remove("done");
+              cell.textContent = "";
+              localStorage.removeItem(storageKey);
             } else {
-              localStorage.setItem(key, "1");
-              td.textContent = "✓";
+              cell.classList.add("done");
+              cell.textContent = "✓";
+              localStorage.setItem(storageKey, "1");
             }
           };
 
+          td.appendChild(cell);
           tr.appendChild(td);
         });
 
@@ -99,15 +109,22 @@ fetch("data.json")
       const labels = [];
       const values = [];
 
+      const totalMax = data.tugas.length * days.length;
+
       Object.keys(data.users).forEach(userKey => {
-        let done = 0;
+        let doneCount = 0;
+
         data.tugas.forEach(t =>
           days.forEach(d => {
-            if (localStorage.getItem(`${userKey}-${t}-${d}`)) done++;
+            if (localStorage.getItem(`${userKey}-${t}-${d}`)) {
+              doneCount++;
+            }
           })
         );
+
+        const percent = Math.round((doneCount / totalMax) * 100);
         labels.push(data.users[userKey].nama);
-        values.push(done);
+        values.push(percent);
       });
 
       new Chart(canvas, {
@@ -116,23 +133,33 @@ fetch("data.json")
           labels,
           datasets: [{
             label: "Progres (%)",
-            data: values
+            data: values,
+            backgroundColor: "#2ecc71"
           }]
         },
         options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: v => v + "%"
+              }
+            }
+          },
           plugins: {
             datalabels: {
+              color: "#fff",
               anchor: "end",
               align: "top",
               formatter: v => v + "%"
             }
-          },
-          scales: {
-            y: { beginAtZero: true, max: 100 }
           }
         },
         plugins: [ChartDataLabels]
       });
     }
 
-  });
+  })
+  .catch(err => console.error("SCRIPT ERROR:", err));
