@@ -117,3 +117,16 @@ tbody td:first-child {
   font-size: 18px;
   font-weight: bold;
 }
+#page-detail {
+  min-height: 100vh;
+}
+
+#page-detail table {
+  color: #fff;
+}
+
+#page-detail th,
+#page-detail td {
+  text-align: center;
+}
+
