@@ -7,8 +7,10 @@ fetch("data.json")
     /* ================= INDEX ================= */
     if (document.body.id === "page-index") {
       const list = document.getElementById("list");
+      if (!list) return;
 
-      // === RENDER USER CARD ===
+      list.innerHTML = "";
+
       Object.keys(data.users).forEach(key => {
         const card = document.createElement("div");
         card.className = "user-card";
@@ -19,69 +21,97 @@ fetch("data.json")
         list.appendChild(card);
       });
 
-      // === MUSIC PLAYER (INDEX ONLY) ===
+      // 🎵 MUSIC PLAYER (INDEX ONLY)
       const audio = document.getElementById("audio");
       const select = document.getElementById("musicSelect");
       const playBtn = document.getElementById("playBtn");
 
       if (audio && select && playBtn) {
-
-        // pilih lagu
-        select.addEventListener("change", () => {
+        select.onchange = () => {
           if (!select.value) return;
           audio.src = select.value;
-          audio.play()
-            .then(() => playBtn.textContent = "⏸")
-            .catch(() => alert("Klik ▶️ untuk mulai musik"));
-        });
+          audio.play().catch(() => {});
+          playBtn.textContent = "⏸";
+        };
 
-        // play / pause
-        playBtn.addEventListener("click", () => {
-          if (!audio.src) {
-            alert("Pilih musik dulu");
-            return;
-          }
-
+        playBtn.onclick = () => {
+          if (!audio.src) return;
           if (audio.paused) {
-            audio.play()
-              .then(() => playBtn.textContent = "⏸");
+            audio.play().catch(() => {});
+            playBtn.textContent = "⏸";
           } else {
             audio.pause();
             playBtn.textContent = "▶️";
           }
-        });
+        };
       }
     }
 
     /* ================= DETAIL ================= */
     if (document.body.id === "page-detail") {
       const userKey = new URLSearchParams(location.search).get("user");
-      if (!userKey) return;
+      if (!userKey || !data.users[userKey]) return;
 
       const namaEl = document.getElementById("nama");
       const tbody = document.querySelector("#tabel tbody");
+      const thead = document.getElementById("thead");
+
+      if (!namaEl || !tbody || !thead) return;
 
       namaEl.textContent = data.users[userKey].nama;
+      tbody.innerHTML = "";
+      thead.innerHTML = "";
 
+      // === BUAT HEADER DENGAN TANGGAL ===
+      const trHead = document.createElement("tr");
+      trHead.innerHTML = `<th>Tugas</th>`;
+
+      const today = new Date();
+      const start = new Date(today);
+      start.setDate(today.getDate() - today.getDay()); // mulai Ahad
+
+      days.forEach((day, i) => {
+        const d = new Date(start);
+        d.setDate(start.getDate() + i);
+        const tgl = d.getDate();
+
+        const th = document.createElement("th");
+        th.innerHTML = `${day}<br><small>${tgl}</small>`;
+        trHead.appendChild(th);
+      });
+
+      thead.appendChild(trHead);
+
+      // === ISI TABEL ===
       data.tugas.forEach(tugas => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${tugas}</td>`;
+
+        const tdTask = document.createElement("td");
+        tdTask.textContent = tugas;
+        tr.appendChild(tdTask);
 
         days.forEach(day => {
-          const key = `${userKey}-${tugas}-${day}`;
-          const td = document.createElement("td");
-          td.textContent = localStorage.getItem(key) ? "✓" : "";
+          const storageKey = `${userKey}-${tugas}-${day}`;
+          const done = localStorage.getItem(storageKey);
 
-          td.onclick = () => {
-            if (localStorage.getItem(key)) {
-              localStorage.removeItem(key);
-              td.textContent = "";
+          const td = document.createElement("td");
+          const cell = document.createElement("div");
+          cell.className = "cell" + (done ? " done" : "");
+          cell.textContent = done ? "✓" : "";
+
+          cell.onclick = () => {
+            if (cell.classList.contains("done")) {
+              cell.classList.remove("done");
+              cell.textContent = "";
+              localStorage.removeItem(storageKey);
             } else {
-              localStorage.setItem(key, "1");
-              td.textContent = "✓";
+              cell.classList.add("done");
+              cell.textContent = "✓";
+              localStorage.setItem(storageKey, "1");
             }
           };
 
+          td.appendChild(cell);
           tr.appendChild(td);
         });
 
@@ -92,6 +122,8 @@ fetch("data.json")
     /* ================= GRAFIK ================= */
     if (document.body.id === "page-grafik") {
       const canvas = document.getElementById("allChart");
+      if (!canvas) return;
+
       const labels = [];
       const values = [];
       const total = data.tugas.length * days.length;
@@ -118,6 +150,7 @@ fetch("data.json")
           }]
         },
         options: {
+          responsive: true,
           scales: {
             y: {
               beginAtZero: true,
@@ -139,4 +172,4 @@ fetch("data.json")
     }
 
   })
-  .catch(err => console.error(err));
+  .catch(err => console.error("SCRIPT ERROR:", err));
