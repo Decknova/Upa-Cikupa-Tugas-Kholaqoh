@@ -21,37 +21,34 @@ fetch("data.json")
         list.appendChild(card);
       });
 
-      /* ===== MUSIC PLAYER (FIX FINAL) ===== */
+      // MUSIC PLAYER (INDEX ONLY)
       const audio = document.getElementById("audio");
       const select = document.getElementById("musicSelect");
       const playBtn = document.getElementById("playBtn");
 
       if (audio && select && playBtn) {
 
-        // pilih lagu (TIDAK autoplay)
-        select.addEventListener("change", () => {
+        select.onchange = () => {
           if (!select.value) return;
-          audio.src = select.value; // contoh: ./music/nasheed1.mp3
-          audio.load();             // 🔥 WAJIB
-          playBtn.textContent = "▶️";
-        });
+          audio.src = select.value;
+          audio.play()
+            .then(() => playBtn.textContent = "⏸")
+            .catch(() => alert("Klik ▶️ untuk mulai musik"));
+        };
 
-        // tombol play / pause
-        playBtn.addEventListener("click", () => {
+        playBtn.onclick = () => {
           if (!audio.src) {
             alert("Pilih musik dulu");
             return;
           }
 
           if (audio.paused) {
-            audio.play()
-              .then(() => playBtn.textContent = "⏸")
-              .catch(err => console.error("AUDIO ERROR:", err));
+            audio.play().then(() => playBtn.textContent = "⏸");
           } else {
             audio.pause();
             playBtn.textContent = "▶️";
           }
-        });
+        };
       }
     }
 
@@ -66,6 +63,7 @@ fetch("data.json")
 
       namaEl.textContent = data.users[userKey].nama;
 
+      // HEADER DENGAN TANGGAL
       const today = new Date();
       const start = new Date(today);
       start.setDate(today.getDate() - today.getDay());
@@ -146,8 +144,17 @@ fetch("data.json")
               max: 100,
               ticks: { callback: v => v + "%" }
             }
+          },
+          plugins: {
+            datalabels: {
+              color: "#fff",
+              anchor: "end",
+              align: "top",
+              formatter: v => v + "%"
+            }
           }
-        }
+        },
+        plugins: [ChartDataLabels]
       });
     }
 
