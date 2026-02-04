@@ -21,22 +21,21 @@ fetch("data.json")
         list.appendChild(card);
       });
 
-      // MUSIC PLAYER (INDEX ONLY)
+      // ===== MUSIC PLAYER (INDEX ONLY) =====
       const audio = document.getElementById("audio");
       const select = document.getElementById("musicSelect");
       const playBtn = document.getElementById("playBtn");
 
       if (audio && select && playBtn) {
 
-        select.onchange = () => {
+        select.addEventListener("change", () => {
           if (!select.value) return;
           audio.src = select.value;
-          audio.play()
-            .then(() => playBtn.textContent = "⏸")
-            .catch(() => alert("Klik ▶️ untuk mulai musik"));
-        };
+          audio.load();
+          playBtn.textContent = "▶️";
+        });
 
-        playBtn.onclick = () => {
+        playBtn.addEventListener("click", () => {
           if (!audio.src) {
             alert("Pilih musik dulu");
             return;
@@ -48,7 +47,8 @@ fetch("data.json")
             audio.pause();
             playBtn.textContent = "▶️";
           }
-        };
+        });
+
       }
     }
 
@@ -61,6 +61,8 @@ fetch("data.json")
       const thead = document.getElementById("thead");
       const tbody = document.querySelector("#tabel tbody");
 
+      if (!thead || !tbody) return;
+
       namaEl.textContent = data.users[userKey].nama;
 
       // HEADER DENGAN TANGGAL
@@ -71,10 +73,10 @@ fetch("data.json")
       thead.innerHTML = `
         <tr>
           <th>Tugas</th>
-          ${days.map((d,i)=>{
+          ${days.map((d, i) => {
             const dt = new Date(start);
-            dt.setDate(start.getDate()+i);
-            return `<th>${d}<br>${dt.getDate()}/${dt.getMonth()+1}</th>`;
+            dt.setDate(start.getDate() + i);
+            return `<th>${d}<br>${dt.getDate()}/${dt.getMonth() + 1}</th>`;
           }).join("")}
         </tr>
       `;
@@ -144,17 +146,8 @@ fetch("data.json")
               max: 100,
               ticks: { callback: v => v + "%" }
             }
-          },
-          plugins: {
-            datalabels: {
-              color: "#fff",
-              anchor: "end",
-              align: "top",
-              formatter: v => v + "%"
-            }
           }
-        },
-        plugins: [ChartDataLabels]
+        }
       });
     }
 
