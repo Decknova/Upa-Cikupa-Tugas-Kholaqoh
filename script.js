@@ -7,7 +7,7 @@ fetch("data.json")
     /* ================= INDEX ================= */
     if (document.body.id === "page-index") {
       const list = document.getElementById("list");
-      if (!list) return;
+      if (!list || !data.users) return;
 
       list.innerHTML = "";
 
@@ -21,44 +21,45 @@ fetch("data.json")
         list.appendChild(card);
       });
 
-      /* ===== MUSIC PLAYER (FIX FINAL) ===== */
+      // MUSIC PLAYER
       const audio = document.getElementById("audio");
       const select = document.getElementById("musicSelect");
       const playBtn = document.getElementById("playBtn");
 
       if (audio && select && playBtn) {
-
-        // pilih lagu (TIDAK autoplay)
-        select.addEventListener("change", () => {
+        select.onchange = () => {
           if (!select.value) return;
-          audio.src = select.value; // contoh: ./music/nasheed1.mp3
-          audio.load();             // 🔥 WAJIB
+          audio.src = select.value;
+          audio.load();
           playBtn.textContent = "▶️";
-        });
+        };
 
-        // tombol play / pause
-        playBtn.addEventListener("click", () => {
-          if (!audio.src) {
-            alert("Pilih musik dulu");
-            return;
-          }
-
+        playBtn.onclick = () => {
+          if (!audio.src) return alert("Pilih musik dulu");
           if (audio.paused) {
-            audio.play()
-              .then(() => playBtn.textContent = "⏸")
-              .catch(err => console.error("AUDIO ERROR:", err));
+            audio.play().then(() => playBtn.textContent = "⏸");
           } else {
             audio.pause();
             playBtn.textContent = "▶️";
           }
-        });
+        };
       }
     }
 
     /* ================= DETAIL ================= */
     if (document.body.id === "page-detail") {
       const userKey = new URLSearchParams(location.search).get("user");
-      if (!userKey || !data.users[userKey]) return;
+      if (!userKey || !data.users || !data.users[userKey]) return;
+
+      // 🔥 FIX UTAMA DI SINI
+      const tugasList = Array.isArray(data.tugas)
+        ? data.tugas
+        : Object.values(data.tugas || {});
+
+      if (!tugasList.length) {
+        console.error("TUGAS KOSONG / FORMAT SALAH", data.tugas);
+        return;
+      }
 
       const namaEl = document.getElementById("nama");
       const thead = document.getElementById("thead");
@@ -83,7 +84,7 @@ fetch("data.json")
 
       tbody.innerHTML = "";
 
-      data.tugas.forEach(tugas => {
+      tugasList.forEach(tugas => {
         const tr = document.createElement("tr");
         tr.innerHTML = `<td>${tugas}</td>`;
 
@@ -112,15 +113,19 @@ fetch("data.json")
     /* ================= GRAFIK ================= */
     if (document.body.id === "page-grafik") {
       const canvas = document.getElementById("allChart");
-      if (!canvas) return;
+      if (!canvas || !data.users || !data.tugas) return;
+
+      const tugasList = Array.isArray(data.tugas)
+        ? data.tugas
+        : Object.values(data.tugas);
 
       const labels = [];
       const values = [];
-      const total = data.tugas.length * days.length;
+      const total = tugasList.length * days.length;
 
       Object.keys(data.users).forEach(userKey => {
         let done = 0;
-        data.tugas.forEach(t =>
+        tugasList.forEach(t =>
           days.forEach(d => {
             if (localStorage.getItem(`${userKey}-${t}-${d}`)) done++;
           })
@@ -135,17 +140,12 @@ fetch("data.json")
           labels,
           datasets: [{
             label: "Progres (%)",
-            data: values,
-            backgroundColor: "#2ecc71"
+            data: values
           }]
         },
         options: {
           scales: {
-            y: {
-              beginAtZero: true,
-              max: 100,
-              ticks: { callback: v => v + "%" }
-            }
+            y: { beginAtZero: true, max: 100 }
           }
         }
       });
